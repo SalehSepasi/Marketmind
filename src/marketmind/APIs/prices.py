@@ -7,7 +7,7 @@ COINGECKO_API_KEY = os.getenv("COINGECKO_API_KEY")
 BASE_URL = "https://api.coingecko.com/api/v3/simple/price"
 
 
-def get_price(coin_id: str, currency: str = "usd"):
+def get_price(coin_name: str, currency: str = "usd"):
     """Get the latest available price of a cryptocurrency."""
 
     if not COINGECKO_API_KEY:
@@ -16,7 +16,7 @@ def get_price(coin_id: str, currency: str = "usd"):
         )
 
     params = {
-        "ids": coin_id,
+        "ids": coin_name,
         "vs_currencies": currency,
         "include_24hr_change": "true",
         "include_last_updated_at": "true",
@@ -36,11 +36,11 @@ def get_price(coin_id: str, currency: str = "usd"):
 
     data = response.json()
 
-    if coin_id not in data or currency not in data[coin_id]:
-        raise ValueError(f"No price returned for {coin_id} in {currency}")
+    #if coin_name not in data or currency not in data[coin_name]:
+       # raise ValueError(f"No price returned for {coin_name} in {currency}")
 
     return data
 
 
 if __name__ == "__main__":
-    print(get_price("gold"))
+    print(get_price("Bitcoin"))

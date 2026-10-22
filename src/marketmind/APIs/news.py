@@ -1,22 +1,24 @@
 import os
 import requests
+from datetime import date, timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
 MARKETAUX_API_KEY = os.getenv("MARKETAUX_API_KEY")
 
 
-def get_news(topic: str, published_after: str | None = None):
+def get_news(topic: str):
 
     BASE_URL = "https://api.marketaux.com/v1/news/all"
     if not MARKETAUX_API_KEY:
         raise ValueError("MARKETAUX_API_KEY is not configured.")
+
     params = {
         "api_token": MARKETAUX_API_KEY,
         "search": topic,
         "language": "en",
         "limit": 3,
-        "published_after": published_after
+        "published_after": time_filter()
     }
 
     response = requests.get(
@@ -27,12 +29,12 @@ def get_news(topic: str, published_after: str | None = None):
 
     response.raise_for_status()
 
-    print( process_news(response.json().get("data", []))   )
+    return process_news(response.json().get("data", []))  
 
     
 
 
-def process_news(articles: list[dict]) -> list[dict]:
+def process_news(articles: list[dict]):
     """Extract useful fields from raw news articles."""
 
     processed_articles = []
@@ -50,5 +52,10 @@ def process_news(articles: list[dict]) -> list[dict]:
 
     return processed_articles
 
+def time_filter():
+    today = date.today()
+    seven_days_ago = today - timedelta(days=7)
+    return seven_days_ago
+
 if __name__ == "__main__":
-    get_news("Bitcoin","2026-10-10")
+    get_news("Bitcoin",time_filter())
