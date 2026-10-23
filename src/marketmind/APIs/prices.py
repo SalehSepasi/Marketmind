@@ -36,8 +36,7 @@ def get_price(coin_name: str, currency: str = "usd"):
 
     data = response.json()
 
-    #if coin_name not in data or currency not in data[coin_name]:
-       # raise ValueError(f"No price returned for {coin_name} in {currency}")
+
 
     return data
 
